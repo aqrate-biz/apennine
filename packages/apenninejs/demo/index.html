@@ -1,7 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-    <script src="../../apenninejs/dist/cdn.js"></script>
-    <script src="../../alpinejs/dist/cdn.js" defer></script>
+        <title>Apennine</title>
+        <script src="../../apenninejs/dist/cdn.js"></script>
+        <script src="../../alpinejs/dist/cdn.js" defer></script>
     </head>
     <body x-data>
         
@@ -10,8 +12,15 @@
         <h2>Directives</h2>
 
         <h3>x-json</h3>
-        <code>&lt;div x-data="{json:{a:1,b:'string',c:true}}" x-json.2="json"&gt;&lt;/div&gt;</code>
+        <code x-sourcecode></code>
         <div x-data="{json:{a:1,b:'string',c:true}}" x-json.2="json"></div>
+
+        <h3>x-sourcecode</h3>
+        <code x-sourcecode="'#elId'"></code>
+        <div id="elId">Source code element with id = <em>elId</em></div>
+        
+        <div><code x-sourcecode:js="{id:'elScript'}"></code></div>
+        <div><script id="elScript">document.write('script')</script></div>
         
     </body>
 
