@@ -1,0 +1,19 @@
+{
+    "name": "@alpinejs/apennine",
+    "version": "0.0.1",
+    "description": "An extension for Alpine framework",
+    "homepage": "https://apenninejs.dev/",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aqrate-biz/apennine.git",
+        "directory": "packages/apenninejs"
+    },
+    "author": "Daniele Paviani",
+    "license": "MIT",
+    "main": "dist/module.cjs.js",
+    "module": "dist/module.esm.js",
+    "unpkg": "dist/cdn.min.js",
+    "dependencies": {
+
+    }
+}
