@@ -3,14 +3,14 @@ import { warn } from '../utils/warn'
 /**
  * Directive: x-sourcecode
  *  <code x-sourcecode:value.{modifiers}="{expression}"></code>
- *  value: lang
+ *  value: lang (html|js)
  *  modifiers: 
- *  expression: queryselector
+ *  expression: queryselector string or object for queryselector, if empty => next sibling
  */
 export default function (Alpine) {
     Alpine.directive('sourcecode', (el, { value, expression, modifiers }, { effect, evaluateLater }) => {
-        if(el.tagName.toLowerCase()!='code'){
-            warn('Tag for x-sourcecode should be <code></code>')
+        if(el.tagName.toLowerCase()!='code' || el.tagName.toLowerCase()!='pre'){
+            warn('Tag for x-sourcecode should be <code></code> or <pre></pre>')
         }
         let lang = value || 'html'
         let evaluate = evaluateLater(expression || 'undefined')
