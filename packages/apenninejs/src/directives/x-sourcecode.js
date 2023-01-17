@@ -9,7 +9,7 @@ import { warn } from '../utils/warn'
  */
 export default function (Alpine) {
     Alpine.directive('sourcecode', (el, { value, expression, modifiers }, { effect, evaluateLater }) => {
-        if(el.tagName.toLowerCase()!='code' || el.tagName.toLowerCase()!='pre'){
+        if(el.tagName.toLowerCase()!='code' && el.tagName.toLowerCase()!='pre'){
             warn('Tag for x-sourcecode should be <code></code> or <pre></pre>')
         }
         let lang = value || 'html'

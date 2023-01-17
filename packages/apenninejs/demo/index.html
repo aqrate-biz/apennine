@@ -25,12 +25,29 @@
                 margin-bottom: 1em;
             }
         </style>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('app', () => ({
+                    config: {
+                        languages: { 
+                            default: 'en'
+                        }
+                    }
+                }))
+            })
+        </script>
     </head>
-    <body x-data>
+    <body x-data="app" x-app:ApennineApp="config">
         
         <h1>Apennine</h1>
 
         <h2>Directives</h2>
+
+        <h3>x-app</h3>
+
+        <div class="container">
+            <div x-json.2="$store.config"></div>
+        </div>
 
         <h3>x-json</h3>
 
@@ -47,7 +64,7 @@
         </div>
         <div class="container">
             <div><code x-sourcecode:js="{id:'elScript'}"></code></div>
-            <div><script id="elScript">document.write('script')</script></div>
+            <div><script id="elScript">document.querySelector('#elScript').after('script')</script></div>
         </div>
 
         <h3>x-md</h3>
