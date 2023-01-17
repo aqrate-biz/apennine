@@ -74,6 +74,20 @@
             <div x-data="{md:'*markdown*'}" x-md="md"></div>
         </div>
 
+        <h3>x-format</h3>
+        
+        <div class="container">
+            <code x-sourcecode></code>
+            <div>
+                <div x-format.uppercase="'uppercase'"></div>
+                <div x-format.lowercase>LOWERCASE</div>
+                <div x-data="{text:'camel-case'}" x-format.camelize="text"></div>
+                <div x-format:html.uppercase.bold>bold</div>
+                <div x-format.bold>bold</div>
+                <div x-text="$format('prefix','123', '+')"></div>
+            </div>
+        </div>
+
         <h3>x-logger, x-dispatch</h3>
 
         <div class="container">
