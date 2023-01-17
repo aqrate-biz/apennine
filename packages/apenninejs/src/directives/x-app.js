@@ -26,7 +26,8 @@ export default function (Alpine) {
             session: '',
             labels: '',
             api: '',
-            base: ''
+            base: '',
+            templates: 'templates/'
         },
         defaults: {
             account: {},

@@ -5,6 +5,7 @@ import xJson from './x-json'
 import xLogger from './x-logger'
 import xMd from './x-md'
 import xSourcecode from './x-sourcecode'
+import xTemplate from './x-template'
 
 
 export default function (Alpine) {
@@ -15,4 +16,5 @@ export default function (Alpine) {
     xLogger(Alpine)
     xMd(Alpine)
     xSourcecode(Alpine)
+    xTemplate(Alpine)
 }

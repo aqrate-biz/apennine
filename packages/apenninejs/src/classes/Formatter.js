@@ -33,4 +33,7 @@ export class Formatter {
     prefix(content, prefix){
         return prefix + content
     }
+    postfix(content, postfix){
+        return content + postfix
+    }
 }

@@ -31,6 +31,9 @@
                     config: {
                         languages: { 
                             default: 'en'
+                        },
+                        urls: {
+                            base: 'http://127.0.0.1:5500/packages/apenninejs/demo/'
                         }
                     }
                 }))
@@ -47,6 +50,17 @@
 
         <div class="container">
             <div x-json.2="$store.config"></div>
+        </div>
+
+        <h3>x-template</h3>
+        
+        <div class="container">
+            <code x-sourcecode></code>
+            <div>
+                <template x-data="{title:'Titolo',subtitle:'sottotitolo'}" x-template:foo></template>
+            </div>
+            <template x-data="{tpl:'bar',st:'dynamic'}" x-template="tpl"></template>
+            <div x-data="{st:'magic'}" x-html="$template('bar')"></div>
         </div>
 
         <h3>x-json</h3>

@@ -30,7 +30,7 @@ export default function (Alpine) {
     })
 
     Alpine.magic('format', () => { 
-        return Alpine.formatter.format.bind(Alpine.formatter) //TODO params 
+        return Alpine.formatter.format.bind(Alpine.formatter)
     }) 
 }
 
