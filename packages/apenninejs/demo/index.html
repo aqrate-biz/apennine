@@ -4,6 +4,27 @@
         <title>Apennine</title>
         <script src="../../apenninejs/dist/cdn.js"></script>
         <script src="../../alpinejs/dist/cdn.js" defer></script>
+        <style>
+            body{
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            .container {
+                padding: 1em;
+                margin: 0.5em;
+                border-left: 2px solid #ccc;
+                
+                background-color: #eee;
+            }
+            code {
+                display: inline-block;
+                outline: 1px solid #666;
+                padding: 0.3em;
+                border-radius: 1px;
+                background-color: #888;
+                color: #eee;
+                margin-bottom: 1em;
+            }
+        </style>
     </head>
     <body x-data>
         
@@ -12,20 +33,54 @@
         <h2>Directives</h2>
 
         <h3>x-json</h3>
-        <code x-sourcecode></code>
-        <div x-data="{json:{a:1,b:'string',c:true}}" x-json.2="json"></div>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-data="{json:{a:1,b:'string',c:true}}" x-json.2="json"></div>
+        </div>
 
         <h3>x-sourcecode</h3>
-        <code x-sourcecode="'#elId'"></code>
-        <div id="elId">Source code element with id = <em>elId</em></div>
-        
-        <div><code x-sourcecode:js="{id:'elScript'}"></code></div>
-        <div><script id="elScript">document.write('script')</script></div>
-        
-        <h3>x-md</h3>
-        <code x-sourcecode></code>
-        <div x-data="{md:'*markdown*'}" x-md="md"></div>
 
+        <div class="container">
+            <code x-sourcecode="'#elId'"></code>
+            <div id="elId">Source code element with id = <em>elId</em></div>
+        </div>
+        <div class="container">
+            <div><code x-sourcecode:js="{id:'elScript'}"></code></div>
+            <div><script id="elScript">document.write('script')</script></div>
+        </div>
+
+        <h3>x-md</h3>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-data="{md:'*markdown*'}" x-md="md"></div>
+        </div>
+
+        <h3>x-logger, x-dispatch</h3>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-logger:console.warn>
+                In the console it should be a warning entry
+                <div x-dispatch:log="{level:'w',message:'message',data:{a:1}}"></div>
+            </div>
+        </div>
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-logger:console.warn>
+                In the console it should not be an info entry
+                <div x-dispatch:log="{level:'i',message:'message',data:{a:1}}"></div>
+            </div>
+        </div>
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-logger:store.debug>
+                Store: <div x-text="$store.log.entries"></div>
+                <div x-dispatch:log="{level:'i',message:'message',data:{a:1}}"></div>
+                <div x-dispatch:log="{level:'d',message:'message',data:{a:1}}"></div>
+            </div>
+        </div>
     </body>
 
 </html>
