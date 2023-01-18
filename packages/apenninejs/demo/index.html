@@ -93,11 +93,16 @@
             </div>
         </div>
 
-        <h3>x-json</h3>
+        <h3>x-json, $json</h3>
 
         <div class="container">
             <code x-sourcecode></code>
             <div x-data="{json:{a:1,b:'string',c:true}}" x-json.2="json"></div>
+        </div>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-data="{json:{a:1,b:'string',c:true}}" x-text="$json(json, 2)"></div>
         </div>
 
         <h3>x-sourcecode</h3>
@@ -154,6 +159,29 @@
                 Store: <div x-text="$store.log.entries"></div>
                 <div x-dispatch:log="{level:'i',message:'message',data:{a:1}}"></div>
                 <div x-dispatch:log="{level:'d',message:'message',data:{a:1}}"></div>
+            </div>
+        </div>
+
+        <h3>x-d</h3>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-data="{resp: ''}" x-d.take="{key:'resp'}">
+                <div x-text="resp"></div>
+                <script x-d:file.fetch="{url:'templates/bar.html'}"></script>
+            </div>
+        </div>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-data="{t:0}" 
+                x-d:local.send="{key:'testdatasend',data:{t:Date.now()}}"
+                x-d:local.fetch="{key:'testdatasend'}"
+                x-d.take="{key:'t'}">
+                <div x-data x-json="t"></div>
+                <button @click="$dispatch('data-send')">save</button>
+                <button @click="$dispatch('data-fetch')">load</button>
+                <button @click="t = 2">2</button>
             </div>
         </div>
     </body>

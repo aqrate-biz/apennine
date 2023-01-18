@@ -33,6 +33,12 @@ export default function (Alpine) {
             })
         })
     })
+
+    Alpine.magic('json', () => { 
+        return (o, s) => { 
+            return stringifyCircularJSON(o, null, s)
+        }
+    })
 }
 
 
