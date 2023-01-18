@@ -6,6 +6,7 @@ import xLogger from './x-logger'
 import xMd from './x-md'
 import xSourcecode from './x-sourcecode'
 import xTemplate from './x-template'
+import xTranslate from './x-translate'
 
 
 export default function (Alpine) {
@@ -17,4 +18,5 @@ export default function (Alpine) {
     xMd(Alpine)
     xSourcecode(Alpine)
     xTemplate(Alpine)
+    xTranslate(Alpine)
 }

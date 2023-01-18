@@ -30,13 +30,23 @@
                 Alpine.data('app', () => ({
                     config: {
                         languages: { 
-                            default: 'en'
+                            default: 'en',
+                            availables: ['en','it']
                         },
                         urls: {
                             base: 'http://127.0.0.1:5500/packages/apenninejs/demo/'
                         }
                     }
                 }))
+
+                Alpine.i18n.setLanguage('en', {
+                    label1: 'Label one',
+                    labelX: 'Label ${val}'
+                })
+                Alpine.i18n.setLanguage('it', {
+                    label1: 'Etichetta uno',
+                    labelX: 'Etichetta ${val}'
+                })
             })
         </script>
     </head>
@@ -49,7 +59,13 @@
         <h3>x-app</h3>
 
         <div class="container">
+            <code x-sourcecode></code>
             <div x-json.2="$store.config"></div>
+        </div>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-text="$config.name"></div> 
         </div>
 
         <h3>x-template</h3>
@@ -61,6 +77,19 @@
             </div>
             <template x-data="{tpl:'bar',st:'dynamic'}" x-template="tpl"></template>
             <div x-data="{st:'magic'}" x-html="$template('bar')"></div>
+        </div>
+
+        <h3>x-translate</h3>
+        <div class="container">
+            <code x-sourcecode></code>
+            <div>
+                <div x-translate:label1></div>
+                <div x-translate:label1.en></div>
+                <div x-translate:label-x="{val:1}"></div>
+                <div x-data="{v:2}" x-translate:label-x.en="{val:v}"></div>
+                <div x-translate:label1="{_lang:'en'}"></div>
+                <div x-translate="{_label:'label1'}"></div>
+            </div>
         </div>
 
         <h3>x-json</h3>

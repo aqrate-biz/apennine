@@ -1,9 +1,14 @@
 
-
+/**
+ * Directive: x-
+ *  <tag x-:value.[modifiers]="{expression}"></tag>
+ *  value:
+ *  modifiers: 
+ *  expression: 
+ */
 export default function (Alpine) {
-    Alpine.directive('[name]', (el, { value, modifiers, expression }, { Alpine, effect, cleanup, evaluate, evaluateLater }) => {
-
-        [...code...]
-
+    Alpine.directive('', (el, { value, expression, modifiers }, { Alpine, effect, evaluate, evaluateLater, cleanup }) => {
+        
     })
 }
+

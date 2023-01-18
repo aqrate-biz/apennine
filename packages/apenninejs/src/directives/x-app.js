@@ -14,6 +14,9 @@ export default function (Alpine) {
         },
         change(obj){
             merge(this, obj)
+            if(!this.languages.current){
+                this.languages.current = Alpine.i18n.getLanguage(this.languages.browser)
+            }
         },
 
         languages: {
@@ -49,6 +52,10 @@ export default function (Alpine) {
             })
         })
     })
+
+    Alpine.magic('config', () => { 
+        return Alpine.store('config')
+    }) 
 }
 
 
