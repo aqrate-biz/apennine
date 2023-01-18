@@ -64,5 +64,11 @@ export default function (Alpine) {
             })
         })
     })
+
+    Alpine.magic('translate', () => { 
+        return (key, params) => { 
+            return Alpine.i18n.getLabel.call(Alpine.i18n, null, key, params)
+        }
+    }) 
 }
 

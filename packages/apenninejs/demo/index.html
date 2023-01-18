@@ -56,7 +56,7 @@
 
         <h2>Directives</h2>
 
-        <h3>x-app</h3>
+        <h3>x-app, $config</h3>
 
         <div class="container">
             <code x-sourcecode></code>
@@ -68,7 +68,7 @@
             <div x-text="$config.name"></div> 
         </div>
 
-        <h3>x-template</h3>
+        <h3>x-template, $template</h3>
         
         <div class="container">
             <code x-sourcecode></code>
@@ -89,6 +89,7 @@
                 <div x-data="{v:2}" x-translate:label-x.en="{val:v}"></div>
                 <div x-translate:label1="{_lang:'en'}"></div>
                 <div x-translate="{_label:'label1'}"></div>
+                <div x-text="$translate('label1')"></div>
             </div>
         </div>
 
@@ -117,7 +118,7 @@
             <div x-data="{md:'*markdown*'}" x-md="md"></div>
         </div>
 
-        <h3>x-format</h3>
+        <h3>x-format, $format</h3>
         
         <div class="container">
             <code x-sourcecode></code>

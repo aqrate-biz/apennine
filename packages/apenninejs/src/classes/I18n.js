@@ -37,6 +37,7 @@ export class I18n{
     }
 
     getLabel(lang, key, params){
+        if(!lang) lang = Alpine.store('config').languages.current
         lang = this._n(lang)
         key = camelize(key)
         let label = ''
