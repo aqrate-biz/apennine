@@ -17,8 +17,10 @@ function fetchFn(el, connector, config, options){
         .then(response => {
             response.setCaller(el)
             dispatch(el, 'data-fetched', response)
-            if(options.method==='get' || !options.method){
-                dispatch(el, 'data-store', response)
+            if(options.events){
+                for(let ev of options.events){
+                    dispatch(el, ev, response)
+                }
             }
         })
         .catch(response => {
@@ -40,10 +42,10 @@ export default function (Alpine) {
             wait: modifierTimeValue('wait', modifiers, 0),
             refresh: modifierTimeValue('refresh', modifiers, 0),
             auto: !modifiers.includes['stop'],
-            method: modifierInArrayValue(['get','put','post','delete'], modifiers, 'get')
+            method: modifierInArrayValue(['get','put','post','delete'], modifiers, 'get'),
+            events: []
         }
-        if(options.method!=='get') options.auto = false
-
+        
         let refreshInterval = null
 
         Alpine.bind(el, {
@@ -51,6 +53,20 @@ export default function (Alpine) {
                 fetchFn(el, connector, evaluate(expression), options)
             }
         })
+
+        if(options.method!=='get'){
+            options.auto = false
+            Alpine.bind(el, {
+                '@form-submit.stop'(e){
+                    let config = evaluate(expression)
+                    config.data = e.detail
+                    options.events.push('form-submitted')
+                    fetchFn(el, connector, config, options)
+                }
+            })
+        } else {
+            options.events.push('data-store')
+        }
 
         effect(() => {
             evaluateExp(config => {

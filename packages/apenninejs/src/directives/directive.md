@@ -12,3 +12,4 @@ export default function (Alpine) {
     })
 }
 
+Alpine.magic('[name]', (el, { Alpine }) => {})
