@@ -5,10 +5,7 @@ export class StaticConnector{
         this.Alpine = Alpine
     }
 
-    async fetch(options){
-        return Promise.resolve(new ConnectorResponse(true, options, options))
-    }
-    async send(options){
-        return Promise.reject(new ConnectorResponse(405, null, options))
+    async fetch(config, options){
+        return Promise.resolve(new ConnectorResponse(true, config, options))
     }
 }

@@ -4,4 +4,9 @@ export class ConnectorResponse{
         this.data = data
         this.response = response
     }
+
+    setCaller(el){
+        this.caller = el
+        this.id = el.id
+    }
 }

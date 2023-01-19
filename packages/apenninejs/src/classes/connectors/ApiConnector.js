@@ -6,9 +6,9 @@ export class ApiConnector{
         this.Alpine = Alpine
     }
 
-    getUrl(options) {
-        let s = options.url
-        let params = options.params
+    getUrl(config) {
+        let s = config.url
+        let params = config.params
         if(params && Object.keys(params).length>0){
             s = s + '?' + new URLSearchParams(params).toString()
         }
@@ -20,35 +20,14 @@ export class ApiConnector{
         }
     }
 
-    async fetch(options){
+    async fetch(config, options){
         return new Promise((resolve, reject) => {
-            let Url = this.getUrl(options)
+            let Url = this.getUrl(config)
             fetch(Url.url, {
-                method: 'GET',
+                method: options.method || 'get',
                 mode: Url.cors ? 'cors' : 'same-origin',
                 credentials: 'include',
-                cache: 'no-store', //TODO
-            })
-            .then(async (response) => { 
-                if (!response.ok) {
-                    reject(new ConnectorResponse(response.status, null, response))
-                }
-                let json = await response.json()
-                resolve(new ConnectorResponse(response.status, json, response)) 
-            })
-            .catch(err => {
-                reject(new ConnectorResponse(response.status, null, err))
-            })
-        })
-    }
-    async send(options){
-        return new Promise((resolve, reject) => {
-            let Url = this.getUrl(options)
-            fetch(Url.url, {
-                method: options.method || (options.data.id || options.data.Id ? 'PUT' : 'POST'), //can be DELETE also
-                body: data,
-                mode: Url.cors ? 'cors' : 'same-origin',
-                credentials: 'include',
+                body: config.data,
                 cache: 'no-store', //TODO
             })
             .then(async (response) => { 

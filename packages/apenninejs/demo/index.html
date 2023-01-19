@@ -162,28 +162,37 @@
             </div>
         </div>
 
-        <h3>x-d</h3>
+        <h3>x-fetch, $fetch</h3>
 
         <div class="container">
             <code x-sourcecode></code>
-            <div x-data="{resp: ''}" x-d.take="{key:'resp'}">
-                <div x-text="resp"></div>
-                <script x-d:file.fetch="{url:'templates/bar.html'}"></script>
+            <div x-data="{fetch1:null, fetch2:null}" x-store>
+                <script id="fetch1" x-fetch:file="{url:'templates/bar.html'}"></script>
+                <div id="fetch2" x-text="$fetch('file',{url:'templates/foo.html'})"></div>
+                <div x-text="fetch1"></div>
+                <div x-text="fetch2"></div>
+            </div>
+        </div>
+
+        <h3>x-store</h3>
+
+        <div class="container">
+            <code x-sourcecode></code>
+            <div x-store:fetchdata>
+                <div id="staticdata" x-fetch:static="{now:Date.now()}"></div>
+                <div x-json="$store.fetchdata"></div>
             </div>
         </div>
 
         <div class="container">
             <code x-sourcecode></code>
-            <div x-data="{t:0}" 
-                x-d:local.send="{key:'testdatasend',data:{t:Date.now()}}"
-                x-d:local.fetch="{key:'testdatasend'}"
-                x-d.take="{key:'t'}">
-                <div x-data x-json="t"></div>
-                <button @click="$dispatch('data-send')">save</button>
-                <button @click="$dispatch('data-fetch')">load</button>
-                <button @click="t = 2">2</button>
+            <div x-data="{f:null}" x-store="{key:'f'}">
+                <div x-fetch:static.refresh.5s="{now:Date.now()}"></div>
+                <div x-json="f"></div>
             </div>
         </div>
+
+        
     </body>
 
 </html>

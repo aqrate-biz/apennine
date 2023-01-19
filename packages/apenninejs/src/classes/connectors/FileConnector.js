@@ -6,9 +6,9 @@ export class FileConnector{
         this.Alpine = Alpine
     }
 
-    getUrl(options) {
-        let s = options.url
-        let params = options.params
+    getUrl(config) {
+        let s = config.url
+        let params = config.params
         if(params && Object.keys(params).length>0){
             s = s + '?' + new URLSearchParams(params).toString()
         }
@@ -20,13 +20,14 @@ export class FileConnector{
         }
     }
 
-    async fetch(options){
+    async fetch(config, options){
         return new Promise((resolve, reject) => {
-            let Url = this.getUrl(options)
+            let Url = this.getUrl(config)
             fetch(Url.url, {
-                method: 'GET',
+                method: options.method || 'get',
                 mode: Url.cors ? 'cors' : 'same-origin',
                 credentials: 'include',
+                body: config.data,
                 cache: 'no-store', //TODO
             })
             .then(async (response) => { 
@@ -45,8 +46,5 @@ export class FileConnector{
                 reject(new ConnectorResponse(500, null, err))
             })
         })
-    }
-    async send(options){
-        return Promise.reject(new ConnectorResponse(405, null, options))
     }
 }
