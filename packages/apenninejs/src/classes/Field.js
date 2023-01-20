@@ -1,20 +1,32 @@
 export class FieldType {
-    static TEXT = new FieldType('text')
-    static DECIMAL = new FieldType('decimal', '$decimal($input, \'.\', config.thousandsDelimiter, 3)')
-    static INTEGER = new FieldType('integer', '$integer($input, config.thousandsDelimiter, false)')
-    static UINTEGER = new FieldType('uinteger', '$integer($input, config.thousandsDelimiter, true)')
-    static DATE = new FieldType('date')
-    static DATETIME = new FieldType('datetime')
-    static BOOLEAN = new FieldType('boolean')
-    static SELECT = new FieldType('select')
-    static SET = new FieldType('set')
-    static ARRAY = new FieldType('array')
-    static BUTTON = new FieldType('button')
-    static MONEY = new FieldType('money', '$money($input)')
+    static TEXT = new FieldType('string', 'text')
+    static DECIMAL = new FieldType('number', 'decimal', '$decimal($input, \'.\', config.thousandsDelimiter, 3)')
+    static INTEGER = new FieldType('number', 'integer', '$integer($input, config.thousandsDelimiter, false)')
+    static UINTEGER = new FieldType('number', 'uinteger', '$integer($input, config.thousandsDelimiter, true)')
+    static DATE = new FieldType('time', 'date')
+    static DATETIME = new FieldType('time', 'datetime')
+    static BOOLEAN = new FieldType('boolean', 'boolean')
+    static SELECT = new FieldType('set', 'select')
+    static SET = new FieldType('set', 'set')
+    static ARRAY = new FieldType('array', 'array')
+    static BUTTON = new FieldType('misc', 'button')
+    static MONEY = new FieldType('number', 'money', '$money($input)')
 
-    constructor(name, mask){
+    constructor(group, name, mask){
+        this.group = group
         this.name = name
         this.mask = mask
+    }
+
+    static get(name){
+        return FieldType[name.toUpperCase()]
+    }
+
+    isOf(group){
+        return this.group === group
+    }
+    is(type){
+        return this.name === type
     }
 }
 export class Field {
@@ -49,11 +61,11 @@ export class Field {
             valid: this.valid,
             invalidRules: this.invalidRules,
             raw: this.raw,
-            executingActions: this.executingActions,
         }
     }
 
     get name() { return this._name }
+    set name(v) { }
 
     get type() { return this._type }
     set type(v) { this._type = v }
@@ -78,7 +90,7 @@ export class Field {
         this.oldValue = this.value 
         this._value = v 
         this.dirty = v 
-        this.raw = v
+        this.raw = v //TODO call converters?
     }
 
     get oldValue() { return this._oldValue }
@@ -94,23 +106,12 @@ export class Field {
     get options() { return this._options }
     set options(v) { 
         this._options = {
-            converter: {
-                name: v.converter && (v.converter.name || v.converter),
-                fn: v.converter ? Alpine.Converter[v.converter.name || v.converter].bind(Alpine.Converter) : v => v,
-                params: v.converter && v.converter.params
-            },
             mask: v.mask
         } 
     }
     
     get raw() { return this._raw }
-    set raw(v) {
-        if(this.options.converter){
-            this._raw = this.options.converter.fn(v, this.options.converter.params)
-        } else {
-            this._raw = (''+v).trim()
-        }
-    }
+    set raw(v) { this._raw = v }
 
     get actions() { return this._actions }
     connectAction(a){
@@ -118,6 +119,9 @@ export class Field {
         for(let ev of a.events){
             if(!this._actions[ev]) { this._actions[ev] = [] }
             this._actions[ev].push(a)
+            this._actions[ev].sort((a, b) => {
+                return this.Alpine.actions.priority(a.name) > this.Alpine.actions.priority(b.name) ? 1 : -1
+            })
         }
     }
     disconnectAction(a){
@@ -142,10 +146,10 @@ export class Field {
             for(let action of this.getActions(event)){
                 promises.push(action.run(context, el))
             }
-            Promise.all(promises)
+            Promise.all(promises) //every action should return an object (or an array of) for updateField
                 .then((results) => {
                     this.actionEnd()
-                    resolve(this)
+                    resolve(results)
                 })
                 .catch((error) => {
                     this.actionEnd()

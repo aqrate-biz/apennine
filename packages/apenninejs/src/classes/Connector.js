@@ -1,4 +1,4 @@
-import camelize from "../utils/camelize"
+import { camelize } from "../utils/camelize"
 
 import { ApiConnector } from "./connectors/ApiConnector"
 import { FileConnector } from "./connectors/FileConnector"

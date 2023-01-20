@@ -1,5 +1,5 @@
 
-import domEl from '../utils/dom-el'
+import { domEl } from '../utils/dom-el'
 /**
  * Directive: x-template
  *  <template x-template:value.[modifiers]="{expression}"></template>

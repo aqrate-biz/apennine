@@ -1,3 +1,4 @@
+import xAction from './x-action'
 import xApp from './x-app'
 import xDispatch from './x-dispatch'
 import xFetch from './x-fetch'
@@ -14,6 +15,7 @@ import xTranslate from './x-translate'
 
 
 export default function (Alpine) {
+    xAction(Alpine)
     xApp(Alpine)
     xDispatch(Alpine)
     xFetch(Alpine)

@@ -1,4 +1,5 @@
-import stringifyCircularJSON from '../utils/stringify';
+import { modifierBooleanValue, modifierIntValue } from '../utils/modifier-value';
+import { stringifyCircularJSON } from '../utils/stringify';
 
 /**
  * Directive: x-json
@@ -10,18 +11,17 @@ export default function (Alpine) {
     Alpine.directive('json', (el, { value, expression, modifiers }, { effect, evaluateLater }) => {
         let evaluate = evaluateLater(expression)
         
-        let spaces = 0
-        if(modifiers && modifiers.length){
-            for(let m of modifiers){
-                if(parseInt(m)>0) spaces = parseInt(m)
-            }
+        let options = {
+            spaces: modifierIntValue('spaces', modifiers, 0),
+            notAlpine: modifierBooleanValue('not-alpine', modifiers),
+            functions: modifierBooleanValue('functions', modifiers)
         }
-    
+        
         effect(() => {
             evaluate(value => {
                 Alpine.mutateDom(() => {
-                    value = stringifyCircularJSON(value, null, spaces)
-                    if(spaces > 0 && el.tagName.toLowerCase()!='pre'){
+                    value = stringifyCircularJSON(value, options, options.spaces)
+                    if(options.spaces > 0 && el.tagName.toLowerCase()!='pre'){
                         value = '<pre>' + value + '</pre>'
                     }
                     el.innerHTML = value
@@ -35,8 +35,8 @@ export default function (Alpine) {
     })
 
     Alpine.magic('json', () => { 
-        return (o, s) => { 
-            return stringifyCircularJSON(o, null, s)
+        return (o, options, s) => { 
+            return stringifyCircularJSON(o, options, s)
         }
     })
 }

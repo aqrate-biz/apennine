@@ -57,10 +57,10 @@ export class Form{
             for(let action of this.getActions(event)){
                 promises.push(action.run(context, el))
             }
-            Promise.all(promises)
+            Promise.all(promises) //every action should return an object (or an array of) for updateField
                 .then((results) => {
                     this.actionEnd()
-                    resolve(this)
+                    resolve(results)
                 })
                 .catch((error) => {
                     this.actionEnd()

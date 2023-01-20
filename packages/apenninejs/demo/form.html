@@ -88,16 +88,18 @@
                 <div class="flex-item">
                     <label>username</label>
                     <input x-data="_field_" x-model="model.username" x-field
+                        x-action:validate-required
+                        x-action:convert-trim
                         :class="{touched:touched}">
                         
                 </div>
                 <div class="flex-item">
                     <h5>Model</h5>
-                    <div x-json.2="model"></div>
+                    <div x-json.spaces.2.not-alpine="model"></div>
                     <h5>Fields</h5>
-                    <div x-json.2="fields"></div>
+                    <div x-json.spaces.2.not-alpine.functions="fields"></div>
                     <h5>Form</h5>
-                    <div x-json.2="form"></div>
+                    <div x-json.spaces.2.not-alpine="form"></div>
                 </div>
             </form>
         </div>

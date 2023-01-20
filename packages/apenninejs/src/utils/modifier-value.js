@@ -35,6 +35,10 @@ export function modifierTimeValue(name, modifiers, def){
     }
 }
 
+export function modifierBooleanValue(name, modifiers){
+    return modifiers.includes(name) || false
+}
+
 export function modifierInArrayValue(array, modifiers, def){
     for(let a of array){
         if(modifiers.includes(a)) return a

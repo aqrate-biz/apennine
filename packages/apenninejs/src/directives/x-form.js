@@ -54,23 +54,23 @@ export default function (Alpine) {
                 for(let key of Object.keys(model)){
                     updateField(this, key, { value: model[key] }, Alpine)
                 }
-                execActions(el, null, 'data-store')
+                execActions(el, null, 'data-store', Alpine)
                 getForm(this).initEnd()
             }, 
             '@field-focus.stop'(e){
                 let f = fieldFromEvent(e)
-                execActions(this, f.name, 'field-focus')
+                execActions(this, f.name, 'field-focus', Alpine)
             }, 
             '@field-blur.stop'(e){
                 let f = fieldFromEvent(e)
                 updateField(this, f.name, { touched: true }, Alpine)
-                execActions(this, f.name, 'field-blur')
+                execActions(this, f.name, 'field-blur', Alpine)
             }, 
             '@field-change.stop'(e){
                 let f = fieldFromEvent(e)
                 updateField(this, f.name, { value: f.value }, Alpine)
                 getField(this, f.name).resetValid()
-                execActions(this, f.name, 'field-change')
+                execActions(this, f.name, 'field-change', Alpine)
             },
             
             '@submit.prevent.stop'(e){
@@ -155,20 +155,29 @@ function getForm(el){
     return el.$data.form
 }
 
-function execActions(el, name, event){
-    el.$nextTick(() => {
+function processActionResults(el, results, Alpine){
+    for(let res of results){
+        if(!Array.isArray(res)) res = [ res ]
+        for(let r of res){
+            if(r.name){
+                updateField(el, r.name, r, Alpine)
+            }
+        }
+    }
+}
+
+function execActions(el, name, event, Alpine){
+    el.$nextTick(async () => {
         if(name) {
-            getField(el, name).execActions(event, { fields: getFields(el), model: getModel(el), fieldName: name }, el)
-                .then(() => {
-                    el.$nextTick(() => {
-                        getForm(el).execActions(event, { fields: getFields(el), model: getModel(el) }, el)            
-                    })
-                })
-                .catch((err) => {
-                    //TODO
-                })
+            let results = await getField(el, name).execActions(event, { fields: getFields(el), model: getModel(el), fieldName: name }, el)
+            processActionResults(el, results, Alpine)
+            el.$nextTick(async () => {
+                let results = await getForm(el).execActions(event, { fields: getFields(el), model: getModel(el) }, el)            
+                processActionResults(el, results, Alpine)
+            })
         } else {
-            getForm(el).execActions(event, { fields: getFields(el), model: getModel(el) }, el)
+            let results = await getForm(el).execActions(event, { fields: getFields(el), model: getModel(el) }, el)
+            processActionResults(el, results, Alpine)
         }
     })
 }

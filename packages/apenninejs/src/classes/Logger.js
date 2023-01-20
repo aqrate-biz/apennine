@@ -1,5 +1,5 @@
-import camelize from '../utils/camelize'
-import stringifyCircularJSON from '../utils/stringify'
+import { camelize } from '../utils/camelize'
+import { stringifyCircularJSON } from '../utils/stringify'
 
 class StoreLogger {
 

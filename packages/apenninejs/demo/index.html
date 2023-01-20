@@ -60,7 +60,7 @@
 
         <div class="container">
             <code x-sourcecode></code>
-            <div x-json.2="$store.config"></div>
+            <div x-json.spaces.2="$store.config"></div>
         </div>
 
         <div class="container">
@@ -97,12 +97,12 @@
 
         <div class="container">
             <code x-sourcecode></code>
-            <div x-data="{json:{a:1,b:'string',c:true}}" x-json.2="json"></div>
+            <div x-data="{json:{a:1,b:'string',c:true}}" x-json.spaces.2="json"></div>
         </div>
 
         <div class="container">
             <code x-sourcecode></code>
-            <div x-data="{json:{a:1,b:'string',c:true}}" x-text="$json(json, 2)"></div>
+            <div x-data="{json:{a:1,b:'string',c:true}}" x-text="$json(json, {}, 2)"></div>
         </div>
 
         <h3>x-sourcecode</h3>
