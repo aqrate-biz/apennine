@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Apennine</title>
+        <script src="../../apenninejs/dist/cdn.js"></script>
+        <script src="../../alpinejs/dist/cdn.js" defer></script>
+        <style>
+            body{
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            .container {
+                padding: 1em;
+                margin: 0.5em;
+                border-left: 2px solid #ccc;
+                
+                background-color: #eee;
+            }
+            code {
+                display: inline-block;
+                outline: 1px solid #666;
+                padding: 0.3em;
+                border-radius: 1px;
+                background-color: #888;
+                color: #eee;
+                margin-bottom: 1em;
+            }
+        </style>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('app', () => ({
+                    config: {
+                        languages: { 
+                            default: 'en',
+                            availables: ['en','it']
+                        },
+                        urls: {
+                            labels: 'i18n/${lang}.json',
+                            base: 'http://127.0.0.1:5500/packages/apenninejs/demo/'
+                        }
+                    }
+                }))
+
+            })
+        </script>
+    </head>
+    <body x-data="app" x-app:ApennineApp="config">
+        
+        <h1>Apennine</h1>
+
+        <h2>App</h2>
+
+        <div x-json.spaces.2="$app"></div>
+        
+    </body>
+
+</html>

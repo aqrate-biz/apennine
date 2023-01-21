@@ -14,8 +14,8 @@ export class Template{
         if(!tpl){
             if(!this.baseUrl){
                 this.baseUrl = new URL(
-                    this.Alpine.store('config').urls.templates, 
-                    this.Alpine.store('config').urls.base)
+                    this.Alpine.store('app').urls.templates, 
+                    this.Alpine.store('app').urls.base)
             }
             let response = await fetch(new URL(name + '.html', this.baseUrl.href), {
                     method: 'GET',

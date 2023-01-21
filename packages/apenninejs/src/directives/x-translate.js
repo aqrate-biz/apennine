@@ -28,7 +28,7 @@ export default function (Alpine) {
             return k
         }
 
-        let evaluateLang = evaluateLater(`$config.languages.current`)
+        let evaluateLang = evaluateLater(`$app.languages.current`)
         let evaluateExp = evaluateLater(expression || '{}')
         
         function translate(lang, key, params){
@@ -58,7 +58,7 @@ export default function (Alpine) {
         effect(() => {
             evaluateExp(params => {
                 let m = modifiers[0] || null
-                let lang = getLang(Alpine.store('config').languages.current, m, params ? params._lang : null)
+                let lang = getLang(Alpine.store('app').languages.current, m, params ? params._lang : null)
                 let key = getKey(value, params ? params._label : null)
                 translate(lang, key, params)
             })

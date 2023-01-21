@@ -12,7 +12,7 @@ export class FileConnector{
         if(params && Object.keys(params).length>0){
             s = s + '?' + new URLSearchParams(params).toString()
         }
-        let url = new URL(s, this.Alpine.store('config').urls.base)
+        let url = new URL(s, this.Alpine.store('app').urls.base)
         let referer = window.location.origin
         return {
             url: url,

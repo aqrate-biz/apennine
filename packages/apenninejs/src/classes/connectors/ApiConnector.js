@@ -12,7 +12,7 @@ export class ApiConnector{
         if(params && Object.keys(params).length>0){
             s = s + '?' + new URLSearchParams(params).toString()
         }
-        let url = new URL(s, this.Alpine.store('config').urls.api)
+        let url = new URL(s, this.Alpine.store('app').urls.api)
         let referer = window.location.origin
         return {
             url: url,
