@@ -29,11 +29,15 @@
             document.addEventListener('alpine:init', () => {
                 Alpine.data('app', () => ({
                     config: {
+                        routing: {
+                            base: 'packages/apenninejs/demo/app.html'
+                        },
                         languages: { 
                             default: 'en',
                             availables: ['en','it']
                         },
                         urls: {
+                            config: 'config.json',
                             labels: 'i18n/${lang}.json',
                             base: 'http://127.0.0.1:5500/packages/apenninejs/demo/'
                         }

@@ -4,13 +4,18 @@ export class Router {
 
     constructor(Alpine){
         this.Alpine = Alpine
-        this.router = new Navigo('/');
+        this.router = null;
         this.loginPage = null
         this.errorPage = null
         this.notFoundPage = null
     }
 
-    init(pages){
+    async init(base){
+        this.router = new Navigo(base)
+        return Promise.resolve(true)
+    }
+    
+    async initRoutes(pages){
         for(const [name, page] of Object.entries(pages)){
             switch(page.role){
                 case 'normal': this.setRoute(name, page); break
@@ -20,6 +25,7 @@ export class Router {
                 case 'notFound': this.notFoundPage = page; break
             }
         }
+        return Promise.resolve(true)
     }
 
     async loadRoutes(){

@@ -1,4 +1,5 @@
 import { merge } from "../utils/merge"
+import { getDiff } from 'recursive-diff'
 /**
  * Directive: x-app
  *  <body x-app:value.[modifiers]="{expression}"></body>
@@ -27,6 +28,7 @@ export default function (Alpine) {
         },
 
         routing: {
+            base: '/',
             routes: null,
             route: {},
             page: {}
@@ -38,6 +40,7 @@ export default function (Alpine) {
             availables: []
         },
         urls: {
+            config: '',
             session: '',
             labels: '',
             api: '',
@@ -58,8 +61,9 @@ export default function (Alpine) {
         }
     })
 
-    Alpine.directive('app', (el, { value, expression, modifiers }, { evaluateLater, effect, Alpine}) => {
+    Alpine.directive('app', (el, { value, expression, modifiers }, { evaluate, evaluateLater, effect, Alpine}) => {
         let app = Alpine.store('app')
+        let currentApp = JSON.parse(JSON.stringify(app))
         app.change({ name: value })
 
         let evaluateExp = evaluateLater(expression)
@@ -83,7 +87,7 @@ export default function (Alpine) {
             '@authstate-change'(e){
                 let account = e.detail
                 app.change({ session: { auth: !!account.id, account: account }})
-            }
+            },
         })
 
         effect(() => {
@@ -92,29 +96,38 @@ export default function (Alpine) {
             })
         })
 
-        let currentValues = {
-            lang: null,
-            routes: null,
-            routesUrl: null,
-            auth: null
-        }
+        
         effect(() => {
             evaluateApp(val => {
-                if(val.languages.current!==currentValues.lang){
-                    currentValues.lang = val.languages.current
-                    bootStep(app, { name: 'loadLanguage', fn: Alpine.i18n.loadLanguage.bind(Alpine.i18n, val.languages.current) }, Alpine)
-                }
-                if(val.urls.routes!==currentValues.routesUrl){
-                    currentValues.routesUrl = val.urls.routes
-                    bootStep(app, { name: 'loadRoutes', fn: Alpine.router.loadRoutes.bind(Alpine.router) }, Alpine)
-                }
-                if(val.routing.routes!==currentValues.routes){
-                    currentValues.routes = val.routing.routes
-                    bootStep(app, { name: 'setRoutes', fn: fAlpine.router.init.bind(Alpine.router, routes) }, Alpine)
-                }
-                if(val.session.auth!==currentValues.auth){
-                    currentValues.auth = val.session.auth
-                    Alpine.router.resolve()
+                let newApp = JSON.parse(JSON.stringify(val))
+                let mutations = getDiff(currentApp, newApp)
+                currentApp = newApp
+                console.log(mutations)
+                for(let mutation of mutations){
+                    if(mutation.val && ['update','add'].indexOf(mutation.op)>=0){
+                        let path = mutation.path.join('.')
+                        console.log(path)
+                        switch(path){
+                            case 'urls.config': //load configuration
+                                bootStep(app, { name: 'LoadConfig', fn: loadConfig.bind(this, app) }, Alpine)
+                                break
+                            case 'languages.current': //load current language
+                                bootStep(app, { name: 'LoadLanguage', fn: Alpine.i18n.loadLanguage.bind(Alpine.i18n, app.languages.current) }, Alpine)            
+                                break
+                            case 'routing.base': //init router
+                                bootStep(app, { name: 'InitRouter', fn: Alpine.router.init.bind(Alpine.router, app.routing.base) }, Alpine)
+                                break
+                            case 'urls.routes': //load routes
+                                bootStep(app, { name: 'LoadRoutes', fn: Alpine.router.loadRoutes.bind(Alpine.router) }, Alpine)
+                                break
+                            case 'routing.routes': //set routes
+                                bootStep(app, { name: 'SetRoutes', fn: Alpine.router.initRoutes.bind(Alpine.router, app.routing.routes) }, Alpine)
+                                break
+                            case 'session.auth': //changes auth state
+                                Alpine.router.resolve()
+                                break 
+                        }
+                    }
                 }
 
             })
@@ -129,7 +142,25 @@ export default function (Alpine) {
     }) 
 }
 
-
+async function loadConfig(app){
+    return new Promise(async (resolve, reject) => {
+        let response = await fetch(new URL(
+                app.urls.config, 
+                app.urls.base
+                ), 
+            {
+                method: 'GET',
+                cache: 'no-cache'
+            })
+        if(response.ok){
+            let json = await response.json()
+            app.change(json)
+            resolve(true)
+        } else {
+            reject()
+        }
+    })
+}
 
 function bootStep(app, step, Alpine){ //{name, fn}
     let obj = {
@@ -145,7 +176,6 @@ function bootStep(app, step, Alpine){ //{name, fn}
     }
     app.change(obj)
     step.fn(app, Alpine).then((result) => {
-        console.log(result)
         let obj = {
             boot: {
                 counter: app.boot.counter-1,
@@ -157,7 +187,7 @@ function bootStep(app, step, Alpine){ //{name, fn}
             obj.boot.success = true
         }
         app.change(obj)
-    }).catch((err) => {console.error(err)
+    }).catch((err) => {
         let obj = {
             boot: {
                 steps: {}

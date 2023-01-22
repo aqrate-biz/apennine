@@ -15,6 +15,7 @@
     "unpkg": "dist/cdn.min.js",
     "dependencies": {
         "md-json-parser": "^1.0.1",
-        "navigo": "^8.11.1"
+        "navigo": "^8.11.1",
+        "recursive-diff": "^1.0.8"
     }
 }
