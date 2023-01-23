@@ -50,6 +50,9 @@
             .invalid{
                 border-color: red
             }
+            label{
+                display: block;
+            }
         </style>
         <script>
             document.addEventListener('alpine:init', () => {
@@ -91,6 +94,10 @@
                         x-action:validate-required
                         x-action:convert-trim
                         :class="{touched:touched}">
+                    <label>decimal</label>
+                    <input x-model="model.decimal" x-field:decimal.decimals.3.required
+                    x-data="_field_" 
+                    :class="{touched:touched}">
                         
                 </div>
                 <div class="flex-item">

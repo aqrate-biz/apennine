@@ -13,6 +13,7 @@ import xStore from './x-store'
 import xTemplate from './x-template'
 import xTranslate from './x-translate'
 
+import mask from './x-mask'
 
 export default function (Alpine) {
     xAction(Alpine)
@@ -29,4 +30,6 @@ export default function (Alpine) {
     xStore(Alpine)
     xTemplate(Alpine)
     xTranslate(Alpine)
+
+    Alpine.plugin(mask)
 }

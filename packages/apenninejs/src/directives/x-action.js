@@ -2,6 +2,7 @@
 import { last } from "../utils/last"
 import { xAttribute } from "../utils/xattribute"
 import { dispatch } from "../../../alpinejs/src/utils/dispatch"
+import { getDiff } from "recursive-diff"
 /**
  * Directive: x-action
  *  <tag x-action:value.[modifiers]="{expression}"></tag>
@@ -25,9 +26,12 @@ export default function (Alpine) {
         }
 
         let evalParams = evaluateLater(expression || '{}')
-
+        let currentParams = null
         effect(() => {
             evalParams(params => {
+                let newParams = JSON.parse(JSON.stringify(params))
+                let mutations = getDiff(currentParams, newParams)
+                currentParams = newParams
                 let options = {
                     name: actionName,
                     fn: actionFunction,
@@ -35,7 +39,9 @@ export default function (Alpine) {
                     field: fieldName,
                     events: modifiers
                 }
-                dispatch(el, 'action-connect', new Alpine.Action(options))
+                if(mutations.length){
+                    dispatch(el, 'action-connect', new Alpine.Action(options))
+                }
             })
         })
         

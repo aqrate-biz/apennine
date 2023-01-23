@@ -58,6 +58,11 @@ export default function (Alpine) {
             auth: false,
             account: {},
             defaultAccount: {}
+        },
+        formats: {
+            decimal: ',',
+            thousands: '_',
+            date: 'dd/mm/yyyy'
         }
     })
 
@@ -102,11 +107,11 @@ export default function (Alpine) {
                 let newApp = JSON.parse(JSON.stringify(val))
                 let mutations = getDiff(currentApp, newApp)
                 currentApp = newApp
-                console.log(mutations)
+                //console.log(mutations)
                 for(let mutation of mutations){
                     if(mutation.val && ['update','add'].indexOf(mutation.op)>=0){
                         let path = mutation.path.join('.')
-                        console.log(path)
+                        //console.log(path)
                         switch(path){
                             case 'urls.config': //load configuration
                                 bootStep(app, { name: 'LoadConfig', fn: loadConfig.bind(this, app) }, Alpine)

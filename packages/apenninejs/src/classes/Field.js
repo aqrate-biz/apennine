@@ -1,8 +1,7 @@
 export class FieldType {
     static TEXT = new FieldType('string', 'text')
-    static DECIMAL = new FieldType('number', 'decimal', '$decimal($input, \'.\', config.thousandsDelimiter, 3)')
-    static INTEGER = new FieldType('number', 'integer', '$integer($input, config.thousandsDelimiter, false)')
-    static UINTEGER = new FieldType('number', 'uinteger', '$integer($input, config.thousandsDelimiter, true)')
+    static DECIMAL = new FieldType('number', 'decimal', { mask: 'decimal', converter: 'to-decimal'})
+    static INTEGER = new FieldType('number', 'integer', { mask: 'decimal', converter: 'to-int'})
     static DATE = new FieldType('time', 'date')
     static DATETIME = new FieldType('time', 'datetime')
     static BOOLEAN = new FieldType('boolean', 'boolean')
@@ -10,12 +9,12 @@ export class FieldType {
     static SET = new FieldType('set', 'set')
     static ARRAY = new FieldType('array', 'array')
     static BUTTON = new FieldType('misc', 'button')
-    static MONEY = new FieldType('number', 'money', '$money($input)')
+    static MONEY = new FieldType('number', 'money', { mask: 'money', converter: 'to-decimal'})
 
-    constructor(group, name, mask){
+    constructor(group, name, defaults){
         this.group = group
         this.name = name
-        this.mask = mask
+        this.defaults = defaults || {}
     }
 
     static get(name){
@@ -29,6 +28,7 @@ export class FieldType {
         return this.name === type
     }
 }
+
 export class Field {
     
     constructor(name, Alpine){
@@ -45,7 +45,7 @@ export class Field {
         this._invalidRules = []
         this._actions = {}
         this._executingActions = 0
-        this._options = {}
+        this._mask = undefined
         this._raw = undefined
     }
 
@@ -61,6 +61,7 @@ export class Field {
             valid: this.valid,
             invalidRules: this.invalidRules,
             raw: this.raw,
+            maskParams: {}
         }
     }
 
@@ -103,12 +104,8 @@ export class Field {
     get invalidRules() { return this._invalidRules }
     set invalidRules(v) { this._invalidRules.push(v) }
 
-    get options() { return this._options }
-    set options(v) { 
-        this._options = {
-            mask: v.mask
-        } 
-    }
+    get mask() { return this._mask }
+    set mask(v) { this._mask = v }
     
     get raw() { return this._raw }
     set raw(v) { this._raw = v }

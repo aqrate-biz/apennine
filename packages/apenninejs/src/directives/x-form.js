@@ -25,7 +25,7 @@ export default function (Alpine) {
             },
             '@field-add.stop'(e){
                 let f = fieldFromEvent(e)
-                updateField(this, f.name, { available: true, type: f.type, options: f.options }, Alpine)
+                updateField(this, f.name, { available: true, type: f.type, mask: f.mask }, Alpine)
                 addEffect(this, f , effect)
             },
             '@field-remove.stop'(e){
@@ -169,14 +169,14 @@ function processActionResults(el, results, Alpine){
 function execActions(el, name, event, Alpine){
     el.$nextTick(async () => {
         if(name) {
-            let results = await getField(el, name).execActions(event, { fields: getFields(el), model: getModel(el), fieldName: name }, el)
+            let results = await getField(el, name).execActions(event, { fields: getFields(el), model: getModel(el), fieldName: name, Alpine: Alpine }, el)
             processActionResults(el, results, Alpine)
             el.$nextTick(async () => {
-                let results = await getForm(el).execActions(event, { fields: getFields(el), model: getModel(el) }, el)            
+                let results = await getForm(el).execActions(event, { fields: getFields(el), model: getModel(el), Alpine: Alpine }, el)            
                 processActionResults(el, results, Alpine)
             })
         } else {
-            let results = await getForm(el).execActions(event, { fields: getFields(el), model: getModel(el) }, el)
+            let results = await getForm(el).execActions(event, { fields: getFields(el), model: getModel(el), Alpine: Alpine}, el)
             processActionResults(el, results, Alpine)
         }
     })
